@@ -27,10 +27,14 @@ public class BinanceApiWebSocketClientImpl implements BinanceApiWebSocketClient,
     }
 
     @Override
-    public Closeable onDepthEvent(String symbols, BinanceApiCallback<DepthEvent> callback) {
+    public Closeable onDepthEvent(String symbols, Integer updateInterval, BinanceApiCallback<DepthEvent> callback) {
         final String channel = Arrays.stream(symbols.split(","))
                 .map(String::trim)
-                .map(s -> String.format("%s@depth", s))
+                .map(s -> String.format(
+                        "%s@depth%s", 
+                        s, 
+                        (updateInterval != null ? String.format("@%dms", updateInterval) : "")
+                ))
                 .collect(Collectors.joining("/"));
         return createNewWebSocket(channel, new BinanceApiWebSocketListener<>(callback, DepthEvent.class));
     }

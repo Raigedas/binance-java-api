@@ -15,10 +15,11 @@ public interface BinanceApiWebSocketClient extends Closeable {
      * Open a new web socket to receive {@link DepthEvent depthEvents} on a callback.
      *
      * @param symbols  market (one or coma-separated) symbol(s) to subscribe to
+     * @param updateInterval 1000ms (default) or 100ms
      * @param callback the callback to call on new events
      * @return a {@link Closeable} that allows the underlying web socket to be closed.
      */
-    Closeable onDepthEvent(String symbols, BinanceApiCallback<DepthEvent> callback);
+    Closeable onDepthEvent(String symbols, Integer updateInterval, BinanceApiCallback<DepthEvent> callback);
 
     /**
      * Open a new web socket to receive {@link CandlestickEvent candlestickEvents} on a callback.

@@ -83,7 +83,7 @@ public class DepthCacheExample {
     final List<DepthEvent> pendingDeltas = new CopyOnWriteArrayList<>();
     wsCallback.setHandler(pendingDeltas::add);
 
-    this.webSocket = wsClient.onDepthEvent(symbol.toLowerCase(), wsCallback);
+    this.webSocket = wsClient.onDepthEvent(symbol.toLowerCase(), 1000, wsCallback);
 
     return pendingDeltas;
   }
