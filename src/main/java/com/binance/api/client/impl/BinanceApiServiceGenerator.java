@@ -33,6 +33,8 @@ public class BinanceApiServiceGenerator {
         sharedClient = new OkHttpClient.Builder()
                 .dispatcher(dispatcher)
                 .pingInterval(20, TimeUnit.SECONDS)
+                .readTimeout(1, TimeUnit.MINUTES)
+                .writeTimeout(1, TimeUnit.MINUTES)
                 .build();
     }
 
