@@ -4,6 +4,7 @@ import com.binance.api.client.constant.BinanceApiConstants;
 import com.binance.api.client.domain.market.OrderBookEntry;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Collections;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.List;
@@ -101,7 +102,7 @@ public class DepthEvent {
   }
 
   public List<OrderBookEntry> getBids() {
-    return bids;
+    return bids != null ? bids : Collections.EMPTY_LIST;
   }
 
   public void setBids(List<OrderBookEntry> bids) {
@@ -109,7 +110,7 @@ public class DepthEvent {
   }
 
   public List<OrderBookEntry> getAsks() {
-    return asks;
+    return asks != null ? asks : Collections.EMPTY_LIST;
   }
 
   public void setAsks(List<OrderBookEntry> asks) {
