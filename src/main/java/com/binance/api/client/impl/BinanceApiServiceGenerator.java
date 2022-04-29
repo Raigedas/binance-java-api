@@ -2,6 +2,7 @@ package com.binance.api.client.impl;
 
 import com.binance.api.client.BinanceApiError;
 import com.binance.api.client.config.BinanceApiConfig;
+import com.binance.api.client.domain.general.WithRateLimits;
 import com.binance.api.client.exception.BinanceApiException;
 import com.binance.api.client.security.AuthenticationInterceptor;
 import okhttp3.Dispatcher;
@@ -16,7 +17,9 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import okhttp3.Headers;
 
 /**
  * Generates a Binance API implementation based on @see {@link BinanceApiService}.
@@ -89,6 +92,7 @@ public class BinanceApiServiceGenerator {
         try {
             Response<T> response = call.execute();
             if (response.isSuccessful()) {
+                extractRateLimits(response);
                 return response.body();
             } else {
                 BinanceApiError apiError = getBinanceApiError(response);
@@ -99,6 +103,23 @@ public class BinanceApiServiceGenerator {
         }
     }
 
+    static final String RATE_LIMIT_HEADER_PREFIX = "x-mbx-";
+    protected static <T> void extractRateLimits(Response<T> response) {
+        if (!(response.body() instanceof WithRateLimits)) {
+            return;
+        }
+        Map<String, Integer> rateLimits = ((WithRateLimits) response.body()).getRateLimits();
+        Headers headers = response.headers();
+        for (String name : headers.names()) {
+            if (name.startsWith(RATE_LIMIT_HEADER_PREFIX)) {
+                String key = name.substring(RATE_LIMIT_HEADER_PREFIX.length());
+                if (key.toLowerCase().startsWith("used-weight") || key.toLowerCase().startsWith("order-count")) {
+                    rateLimits.put(key, Integer.parseInt(headers.get(name)));
+                }
+            }
+        }
+    }
+    
     /**
      * Extracts and converts the response error body into an object.
      */

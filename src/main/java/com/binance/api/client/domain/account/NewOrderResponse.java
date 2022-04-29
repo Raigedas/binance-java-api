@@ -5,11 +5,14 @@ import com.binance.api.client.domain.OrderSide;
 import com.binance.api.client.domain.OrderStatus;
 import com.binance.api.client.domain.OrderType;
 import com.binance.api.client.domain.TimeInForce;
+import com.binance.api.client.domain.general.WithRateLimits;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,7 +22,9 @@ import java.util.stream.Collectors;
  * @see NewOrder for the request
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NewOrderResponse {
+public class NewOrderResponse implements WithRateLimits {
+    
+  Map<String, Integer> rateLimits = new HashMap<>();
 
   /**
    * Order symbol.
@@ -60,6 +65,12 @@ public class NewOrderResponse {
    * Transact time for this order.
    */
   private Long transactTime;
+
+  
+  @Override
+  public Map<String, Integer> getRateLimits() {
+    return rateLimits;
+  }
 
   public String getSymbol() {
     return symbol;

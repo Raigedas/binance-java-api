@@ -2,7 +2,10 @@ package com.binance.api.client.domain.account.request;
 
 import com.binance.api.client.constant.BinanceApiConstants;
 import com.binance.api.client.domain.OrderStatus;
+import com.binance.api.client.domain.general.WithRateLimits;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.util.HashMap;
+import java.util.Map;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
@@ -11,7 +14,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
  * @see CancelOrderRequest for the request
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CancelOrderResponse {
+public class CancelOrderResponse implements WithRateLimits {
+    
+  Map<String, Integer> rateLimits = new HashMap<>();
 
   private String symbol;
 
@@ -24,6 +29,12 @@ public class CancelOrderResponse {
   private OrderStatus status;
 
   private String executedQty;
+
+  
+  @Override
+  public Map<String, Integer> getRateLimits() {
+    return rateLimits;
+  }
 
   public String getSymbol() {
     return symbol;
